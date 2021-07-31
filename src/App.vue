@@ -1,3 +1,4 @@
+/* eslint-disable vue/valid-template-root */
 <template>
   <div id="app">
     <b-container>
@@ -7,64 +8,96 @@
 
         <p>Adversário: {{this.opponentPoints}}</p>
         <p>Jogador: {{this.playerPoints}}</p>
+
+        <p>Vidas do Adversário: {{this.opponentsLife}}</p>
+        <p>Vidas do Jogador: {{this.playersLife}}</p>
       </div>
 
       <!-- Mão do Adversário -->
       <b-row align-h="center" class="opponent-cards">
-        <b-col md="2" v-for="opponentCard in opponentCards" :key="opponentCard.id">
-            <card
-              :title="opponentCard.title"
-              :image="require('@/assets/card_back.png')"
-              :points="opponentCard.points"
-              state="opponents-hand"
-            ></card>
-        </b-col>
+        <template v-if="this.opponentCards.length > 0">
+          <b-col md="2" v-for="opponentCard in opponentCards" :key="opponentCard.id">
+              <card
+                :title="opponentCard.title"
+                :image="require('@/assets/card_back.png')"
+                :points="opponentCard.points"
+                state="opponents-hand"
+              ></card>
+          </b-col>
+        </template>
+        <template v-else>
+          <b-col md="12">Mão vazia</b-col>
+        </template>
       </b-row>
 
       <!-- Mesa -->
       <b-row align-h="center" class="opponent-table">
-        <b-col md="2" v-for="opponentTableCard in opponentTable" :key="opponentTableCard.id">
-          <card
-            :title="opponentTableCard.title"
-            :image="opponentTableCard.image"
-            :points="opponentTableCard.points"
-            state="opponents-table"
-          ></card>
-        </b-col>
+        <template v-if="this.opponentTable.length > 0">
+          <b-col md="2" v-for="opponentTableCard in opponentTable" :key="opponentTableCard.id">
+            <card
+              :title="opponentTableCard.title"
+              :image="opponentTableCard.image"
+              :points="opponentTableCard.points"
+              state="opponents-table"
+            ></card>
+          </b-col>
+        </template>
+        <template v-else>
+          <b-col md="12">
+            Mesa vazia
+          </b-col>
+        </template>
       </b-row>
       <b-row align-h="center" class="my-table">
-        <b-col md="2" v-for="myTableCard in myTable" :key="myTableCard.id">
-          <card
-            :title="myTableCard.title"
-            :image="myTableCard.image"
-            :points="myTableCard.points"
-            state="players-table"
-          ></card>
-        </b-col>
+        <template v-if="this.myTable.length > 0">
+          <b-col md="2" v-for="myTableCard in myTable" :key="myTableCard.id">
+            <card
+              :title="myTableCard.title"
+              :image="myTableCard.image"
+              :points="myTableCard.points"
+              state="players-table"
+            ></card>
+          </b-col>
+        </template>
+        <template v-else>
+          <b-col md="12">Mesa vazia</b-col>
+        </template>
       </b-row>
 
       <!-- Mão do Jogador -->
       <b-row align-h="center" class="my-cards">
-        <b-col md="2" v-for="playerCard in playerCards" :key="playerCard.id">
-          <a href="#" class="card-action" @click="selectCard(playerCard)">
-            <card
-              :title="playerCard.title"
-              :image="playerCard.image"
-              :points="playerCard.points"
-              state="players-hand"
-            ></card>
-          </a>
-        </b-col>
+        <template v-if="this.playerCards.length > 0">
+          <b-col md="2" v-for="playerCard in playerCards" :key="playerCard.id">
+            <a href="#" class="card-action" @click="selectCard(playerCard)">
+              <card
+                :title="playerCard.title"
+                :image="playerCard.image"
+                :points="playerCard.points"
+                state="players-hand"
+              ></card>
+            </a>
+          </b-col>
+        </template>
+        <template v-else>
+          <b-col md="12">Mão vazia</b-col>
+        </template>
       </b-row>
     </b-container>
+
+    <!-- <result></result> -->
   </div>
 </template>
 
 <script>
 import Card from './components/Card.vue'
+// import Result from './components/Result.vue'
+
 export default {
   name: 'App',
-  components: { Card },
+  components: {
+    Card
+    // Result
+  },
   data () {
     return {
       opponentCards: [],
@@ -79,34 +112,71 @@ export default {
       playerPoints: 0,
       opponentPoints: 0,
 
-      initialHandCards: 2,
+      initialHandCards: 4,
 
       playersOptEnd: false,
       opponentsOptEnd: false,
 
+      opponentsLife: 2,
+      playersLife: 2,
+
       rangeToEndRound: 22,
+
+      result: {
+        title: null
+      },
 
       cards: [
         {
-          id: 1,
+          id: 0,
           title: 'Geralt de Rívia',
           image: require('@/assets/card_geralt.jpg'),
           points: 15
         },
         {
-          id: 2,
+          id: 1,
           title: 'Cirilla Fiona Elen Riannon',
           image: require('@/assets/card_ciri.png'),
           points: 15
         },
         {
-          id: 3,
+          id: 2,
           title: 'Yennefer de Vengerberg',
           image: require('@/assets/card_yennefer.jpg'),
           points: 7
         },
         {
+          id: 3,
+          title: 'Triss Merigold',
+          image: require('@/assets/card_triss.jpg'),
+          points: 7
+        },
+        {
           id: 4,
+          title: 'Yennefer de Vengerberg',
+          image: require('@/assets/card_yennefer.jpg'),
+          points: 7
+        },
+        {
+          id: 5,
+          title: 'Triss Merigold',
+          image: require('@/assets/card_triss.jpg'),
+          points: 7
+        },
+        {
+          id: 6,
+          title: 'Triss Merigold',
+          image: require('@/assets/card_triss.jpg'),
+          points: 7
+        },
+        {
+          id: 7,
+          title: 'Yennefer de Vengerberg',
+          image: require('@/assets/card_yennefer.jpg'),
+          points: 7
+        },
+        {
+          id: 8,
           title: 'Triss Merigold',
           image: require('@/assets/card_triss.jpg'),
           points: 7
@@ -118,16 +188,15 @@ export default {
   methods: {
     draw () {
       let i
+
       for (i = 0; i < this.initialHandCards; i++) {
         var opponentCardNumber = parseInt(Math.random() * (this.cards.length - 0) + 0)
-
         this.opponentCards.push(this.cards[opponentCardNumber])
-        // this.cards.splice(this.cards[opponentCardNumber], 1)
+        this.cards.splice(opponentCardNumber, 1)
 
         var playerCardNumber = parseInt(Math.random() * (this.cards.length - 0) + 0)
-
         this.playerCards.push(this.cards[playerCardNumber])
-        // this.cards.splice(this.cards[playerCardNumber], 1)
+        this.cards.splice(playerCardNumber, 1)
       }
 
       this.disableDraw = true
@@ -135,14 +204,20 @@ export default {
     },
 
     selectCard (card) {
+      console.log(card)
+
       this.myTable.push(card)
       this.playerPoints += card.points
       this.playerCards.splice(card, 1)
 
       var difference = this.opponentPoints - this.playerPoints
 
-      if ((this.opponentCards.length > 0 || difference < this.rangeToEndRound) && this.opponentsOptEnd === false) {
-        this.opponentSelectionCard()
+      if (this.opponentCards.length > 0) {
+        if (difference < this.rangeToEndRound && this.opponentsOptEnd === false) {
+          this.opponentSelectionCard()
+        } else {
+          this.opponentsOptEnd = true
+        }
       } else {
         this.opponentsOptEnd = true
       }
@@ -168,12 +243,25 @@ export default {
 
     verifyWinner () {
       if (this.playerPoints > this.opponentPoints) {
-        console.log('Você venceu')
+        this.opponentsLife--
+
+        this.result.title = 'Você venceu'
       } else if (this.opponentPoints > this.playerPoints) {
-        console.log('Você perdeu')
+        this.playersLife--
+
+        this.result.title = 'Você perdeu'
       } else {
-        console.log('Empate')
+        this.result.title = 'Empate'
       }
+
+      if (this.opponentsLife > 0 || this.playersLife > 0) {
+        this.clearTable()
+      }
+    },
+
+    clearTable () {
+      this.opponentTable = []
+      this.myTable = []
     }
   }
 }
