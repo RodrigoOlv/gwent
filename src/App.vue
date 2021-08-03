@@ -84,19 +84,22 @@
       </b-row>
     </b-container>
 
-    <!-- <result></result> -->
+    <b-modal ref="bv-modal-example" :title="result.title" centered hide-footer hide-header>
+      <div class="d-block text-center">
+        <h3>{{result.message}}</h3>
+      </div>
+    </b-modal>
+
   </div>
 </template>
 
 <script>
 import Card from './components/Card.vue'
-// import Result from './components/Result.vue'
 
 export default {
   name: 'App',
   components: {
     Card
-    // Result
   },
   data () {
     return {
@@ -123,7 +126,8 @@ export default {
       rangeToEndRound: 22,
 
       result: {
-        title: null
+        title: null,
+        message: null
       },
 
       cards: [
@@ -204,8 +208,6 @@ export default {
     },
 
     selectCard (card) {
-      console.log(card)
-
       this.myTable.push(card)
       this.playerPoints += card.points
       this.playerCards.splice(card, 1)
@@ -244,17 +246,26 @@ export default {
     verifyWinner () {
       if (this.playerPoints > this.opponentPoints) {
         this.opponentsLife--
-
-        this.result.title = 'Você venceu'
+        alert('Você venceu essa rodada')
       } else if (this.opponentPoints > this.playerPoints) {
         this.playersLife--
-
-        this.result.title = 'Você perdeu'
+        alert('Você perdeu essa rodada')
       } else {
         this.result.title = 'Empate'
+        alert('Rodada empatada')
       }
 
-      if (this.opponentsLife > 0 || this.playersLife > 0) {
+      if (this.opponentsLife === 0 || this.playersLife === 0) {
+        if (this.opponentsLife === 0) {
+          this.result.title = 'Vitória'
+          this.result.message = 'Você venceu'
+        } else {
+          this.result.title = 'Derrota'
+          this.result.message = 'Você perdeu'
+        }
+
+        this.$refs['bv-modal-example'].show()
+      } else {
         this.clearTable()
       }
     },
@@ -262,6 +273,9 @@ export default {
     clearTable () {
       this.opponentTable = []
       this.myTable = []
+
+      this.opponentPoints = 0
+      this.playerPoints = 0
     }
   }
 }
@@ -276,5 +290,9 @@ export default {
  .card-action, .card-action:hover {
    text-decoration: none;
    color: #333;
+ }
+ button.close {
+   border: none;
+   background: transparent;
  }
 </style>
