@@ -19,14 +19,14 @@
           <b-col md="2" v-for="opponentCard in opponentCards" :key="opponentCard.id">
               <card
                 :title="opponentCard.title"
-                :image="require('@/assets/card_back.png')"
+                :image="require('@/assets/card_back.svg')"
                 :points="opponentCard.points"
                 state="opponents-hand"
               ></card>
           </b-col>
         </template>
         <template v-else>
-          <b-col md="12">Mão vazia</b-col>
+          <b-col md="12" class="no-cards"></b-col>
         </template>
       </b-row>
 
@@ -43,9 +43,7 @@
           </b-col>
         </template>
         <template v-else>
-          <b-col md="12">
-            Mesa vazia
-          </b-col>
+          <b-col md="12" class="no-cards"></b-col>
         </template>
       </b-row>
       <b-row align-h="center" class="my-table">
@@ -60,7 +58,7 @@
           </b-col>
         </template>
         <template v-else>
-          <b-col md="12">Mesa vazia</b-col>
+          <b-col md="12" class="no-cards"></b-col>
         </template>
       </b-row>
 
@@ -79,7 +77,7 @@
           </b-col>
         </template>
         <template v-else>
-          <b-col md="12">Mão vazia</b-col>
+          <b-col md="12" class="no-cards"></b-col>
         </template>
       </b-row>
     </b-container>
@@ -89,7 +87,6 @@
         <h3>{{result.message}}</h3>
       </div>
     </b-modal>
-
   </div>
 </template>
 
@@ -140,7 +137,7 @@ export default {
         {
           id: 1,
           title: 'Cirilla Fiona Elen Riannon',
-          image: require('@/assets/card_ciri.png'),
+          image: require('@/assets/card_ciri.jpg'),
           points: 15
         },
         {
@@ -282,17 +279,23 @@ export default {
 </script>
 
 <style scoped>
+  #app {
+    color: white;
+  }
   .actions {
     position: fixed;
     top: 15px;
     left: 15px;
   }
- .card-action, .card-action:hover {
-   text-decoration: none;
-   color: #333;
- }
- button.close {
-   border: none;
-   background: transparent;
- }
+  .card-action, .card-action:hover {
+    text-decoration: none;
+    color: #333;
+  }
+  button.close {
+    border: none;
+    background: transparent;
+  }
+  .no-cards {
+    min-height: 400px;
+  }
 </style>

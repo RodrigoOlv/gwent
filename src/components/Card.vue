@@ -42,36 +42,53 @@ export default {
 
 <style scoped>
     .card {
-        position: relative;
+      position: relative;
+      border: 1px solid #A0522D;
+      border-radius: 5px;
+    }
+    .card.opponents-hand {
+      border: 1px solid #c0c0c0;
     }
     .players-hand {
-        transition: all ease 1s;
+      box-shadow: 10px 10px 32px black;
+      transition: all ease 1s;
     }
     .players-hand:hover {
-        transform: scale(1.1);
-    }
-    .players-hand .card-img {
-        max-height: 350px;
-        width: auto;
+      transform: scale(1.1);
     }
     .points {
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-size: 22px;
-        font-weight: 700;
-        color: #fff;
-        background: #000;
-        border: 3px solid coral;
-        border-radius: 100%;
-        height: 50px;
-        width: 50px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      background-image: url('../assets/points-canvas.svg');
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      height: 50px;
+      width: 50px;
+    }
+    .card-img {
+      border-radius: 5px 5px 0 0;
+    }
+    .card-body {
+      background-image: radial-gradient(circle, #FAFAD2, #A0522D);
+      border-radius: 0 0 5px 5px;
     }
     .card-title {
-        font-size: 16px;
-        text-align: center;
+      font-size: 12px;
+      color: black;
+      text-align: center;
+      opacity: 0.8;
     }
     .opponents-hand .points, .opponents-hand .card-body {
-        display: none;
+      display: none;
+    }
+    .opponents-hand .card-img {
+      border-radius: 5px;
+      max-width: 100%;
+      height: auto;
     }
 </style>
