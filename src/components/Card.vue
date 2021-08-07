@@ -43,11 +43,11 @@ export default {
 <style scoped>
     .card {
       position: relative;
-      border: 1px solid #A0522D;
-      border-radius: 5px;
+      border: 2px solid #A0522D;
+      border-radius: 8px;
     }
     .card.opponents-hand {
-      border: 1px solid #c0c0c0;
+      border: 2px solid #c0c0c0;
     }
     .players-hand {
       box-shadow: 10px 10px 32px black;

@@ -1,9 +1,8 @@
-/* eslint-disable vue/valid-template-root */
 <template>
   <div id="app">
     <b-container>
       <div class="actions">
-        <b-button @click="draw()" :disabled="disableDraw">Sortear carta</b-button>
+        <b-button @click="draw()" :disabled="disableDraw">Sortear cartas</b-button>
         <b-button @click="endRound()" :disabled="disableEnd">Encerrar rodada</b-button>
 
         <p>Adversário: {{this.opponentPoints}}</p>
@@ -112,7 +111,7 @@ export default {
       playerPoints: 0,
       opponentPoints: 0,
 
-      initialHandCards: 4,
+      initialHandCards: 6,
 
       playersOptEnd: false,
       opponentsOptEnd: false,
@@ -120,7 +119,7 @@ export default {
       opponentsLife: 2,
       playersLife: 2,
 
-      rangeToEndRound: 22,
+      rangeToEndRound: 7,
 
       result: {
         title: null,
@@ -154,33 +153,81 @@ export default {
         },
         {
           id: 4,
-          title: 'Yennefer de Vengerberg',
-          image: require('@/assets/card_yennefer.jpg'),
-          points: 7
-        },
-        {
-          id: 5,
-          title: 'Triss Merigold',
-          image: require('@/assets/card_triss.jpg'),
-          points: 7
+          title: 'Eredin Bréacc Glas',
+          image: require('@/assets/card_eredin.jpg'),
+          points: 13
         },
         {
           id: 6,
-          title: 'Triss Merigold',
-          image: require('@/assets/card_triss.jpg'),
+          title: 'Avallac\'n',
+          image: require('@/assets/card_avallach.jpg'),
           points: 7
         },
         {
           id: 7,
-          title: 'Yennefer de Vengerberg',
-          image: require('@/assets/card_yennefer.jpg'),
-          points: 7
+          title: 'Dandelion',
+          image: require('@/assets/card_dandelion.jpg'),
+          points: 2
         },
         {
           id: 8,
-          title: 'Triss Merigold',
-          image: require('@/assets/card_triss.jpg'),
-          points: 7
+          title: 'Zoltan Chivay',
+          image: require('@/assets/card_zoltan.jpg'),
+          points: 5
+        },
+        {
+          id: 8,
+          title: 'Sigsmund Dijsktra',
+          image: require('@/assets/card_dijkstra.jpg'),
+          points: 6
+        },
+        {
+          id: 9,
+          title: 'Foltest de Teméria',
+          image: require('@/assets/card_foltest.jpg'),
+          points: 8
+        },
+        {
+          id: 10,
+          title: 'Emyr var Emreis',
+          image: require('@/assets/card_emyr.jpg'),
+          points: 10
+        },
+        {
+          id: 11,
+          title: 'Radovid V',
+          image: require('@/assets/card_radovid.jpg'),
+          points: 10
+        },
+        {
+          id: 12,
+          title: 'Vesemir',
+          image: require('@/assets/card_vesemir.jpg'),
+          points: 6
+        },
+        {
+          id: 13,
+          title: 'Lambert',
+          image: require('@/assets/card_lambert.jpg'),
+          points: 6
+        },
+        {
+          id: 14,
+          title: 'Eskel',
+          image: require('@/assets/card_eskel.jpg'),
+          points: 6
+        },
+        {
+          id: 15,
+          title: 'Phillipa Eilhart',
+          image: require('@/assets/card_phillipa.jpg'),
+          points: 6
+        },
+        {
+          id: 16,
+          title: 'Keira Metz',
+          image: require('@/assets/card_keira.jpg'),
+          points: 5
         }
       ]
     }
@@ -209,13 +256,18 @@ export default {
       this.playerPoints += card.points
       this.playerCards.splice(card, 1)
 
-      var difference = this.opponentPoints - this.playerPoints
+      var differenceToPlayer = this.opponentPoints - this.playerPoints
+      var differenceToOpponent = this.playerPoints - this.opponentPoints
 
       if (this.opponentCards.length > 0) {
-        if (difference < this.rangeToEndRound && this.opponentsOptEnd === false) {
-          this.opponentSelectionCard()
-        } else {
+        if (differenceToOpponent < this.rangeToEndRound) {
           this.opponentsOptEnd = true
+        } else {
+          if (differenceToPlayer < this.rangeToEndRound && this.opponentsOptEnd === false) {
+            setTimeout(this.opponentSelectionCard(), 3000)
+          } else {
+            this.opponentsOptEnd = true
+          }
         }
       } else {
         this.opponentsOptEnd = true
@@ -234,7 +286,7 @@ export default {
       this.playersOptEnd = true
 
       while (this.playerPoints >= this.opponentPoints && this.opponentCards.length > 0) {
-        this.opponentSelectionCard()
+        setTimeout(this.opponentSelectionCard(), 3000)
       }
 
       this.verifyWinner()
@@ -262,6 +314,14 @@ export default {
         }
 
         this.$refs['bv-modal-example'].show()
+        this.disableEnd = true
+        this.clearPlayersHand()
+        this.clearOpponentsHand()
+      } else if (this.opponentCards.length === 0 && this.playerCards.length === 0) {
+        this.result.title = 'Derrota'
+        this.result.message = 'Você perdeu'
+        this.$refs['bv-modal-example'].show()
+        this.disableEnd = true
       } else {
         this.clearTable()
       }
@@ -273,6 +333,14 @@ export default {
 
       this.opponentPoints = 0
       this.playerPoints = 0
+    },
+
+    clearPlayersHand () {
+      this.playerCards = []
+    },
+
+    clearOpponentsHand () {
+      this.opponentCards = []
     }
   }
 }
@@ -286,6 +354,7 @@ export default {
     position: fixed;
     top: 15px;
     left: 15px;
+    z-index: 2;
   }
   .card-action, .card-action:hover {
     text-decoration: none;
@@ -297,5 +366,8 @@ export default {
   }
   .no-cards {
     min-height: 400px;
+  }
+  .my-cards, .opponent-cards, .opponent-table, .my-table {
+    padding: 20px;
   }
 </style>
