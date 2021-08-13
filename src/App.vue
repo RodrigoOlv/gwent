@@ -10,10 +10,6 @@
 
         <p>Vidas do Adversário: {{this.opponentsLife}}</p>
         <p>Vidas do Jogador: {{this.playersLife}}</p>
-
-        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
-          Tooltip on right
-        </button>
       </div>
 
       <!-- Mão do Adversário -->
@@ -257,6 +253,8 @@ export default {
       this.disableEnd = false
 
       window.scrollTo(0, document.body.scrollHeight)
+
+      this.toogleMusic()
     },
 
     selectCard (card) {
@@ -359,6 +357,23 @@ export default {
 
     clearOpponentsHand () {
       this.opponentCards = []
+    },
+
+    toogleMusic () {
+      var audioPath = require('@/assets/song.mp3')
+
+      var audio = new Audio(audioPath)
+
+      if (typeof audio.loop === 'boolean') {
+        audio.loop = true
+      } else {
+        audio.addEventListener('ended', function () {
+          this.currentTime = 0
+          this.play()
+        }, false)
+      }
+
+      audio.play()
     }
   }
 }
