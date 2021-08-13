@@ -10,6 +10,10 @@
 
         <p>Vidas do Adversário: {{this.opponentsLife}}</p>
         <p>Vidas do Jogador: {{this.playersLife}}</p>
+
+        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
+          Tooltip on right
+        </button>
       </div>
 
       <!-- Mão do Adversário -->
@@ -81,9 +85,10 @@
       </b-row>
     </b-container>
 
-    <b-modal ref="bv-modal-example" :title="result.title" centered hide-footer hide-header>
+    <b-modal ref="bv-modal-example" :title="result.title" centered hide-header hide-footer>
       <div class="d-block text-center">
-        <h3>{{result.message}}</h3>
+        <img :src="result.icon" alt="" class="img-fluid">
+        <h3 class="text-center">{{result.message}}</h3>
       </div>
     </b-modal>
   </div>
@@ -119,11 +124,12 @@ export default {
       opponentsLife: 2,
       playersLife: 2,
 
-      rangeToEndRound: 7,
+      rangeToEndRound: 5,
 
       result: {
         title: null,
-        message: null
+        message: null,
+        icon: null
       },
 
       cards: [
@@ -249,12 +255,19 @@ export default {
 
       this.disableDraw = true
       this.disableEnd = false
+
+      window.scrollTo(0, document.body.scrollHeight)
     },
 
     selectCard (card) {
       this.myTable.push(card)
       this.playerPoints += card.points
-      this.playerCards.splice(card, 1)
+
+      for (let i = 0; i < this.playerCards.length; i++) {
+        if (card.id === this.playerCards[i].id) {
+          this.playerCards.splice(i, 1)
+        }
+      }
 
       var differenceToPlayer = this.opponentPoints - this.playerPoints
       var differenceToOpponent = this.playerPoints - this.opponentPoints
@@ -265,6 +278,7 @@ export default {
         } else {
           if (differenceToPlayer < this.rangeToEndRound && this.opponentsOptEnd === false) {
             setTimeout(this.opponentSelectionCard(), 3000)
+            // setTimeout(() => this.opponentSelectionCard(), 1000)
           } else {
             this.opponentsOptEnd = true
           }
@@ -285,11 +299,13 @@ export default {
     endRound () {
       this.playersOptEnd = true
 
-      while (this.playerPoints >= this.opponentPoints && this.opponentCards.length > 0) {
+      var differenceToOpponent = this.playerPoints - this.opponentPoints
+
+      while (differenceToOpponent <= this.rangeToEndRound && this.opponentCards.length > 0) {
         setTimeout(this.opponentSelectionCard(), 3000)
       }
 
-      this.verifyWinner()
+      setTimeout(this.verifyWinner(), 3000)
     },
 
     verifyWinner () {
@@ -308,9 +324,11 @@ export default {
         if (this.opponentsLife === 0) {
           this.result.title = 'Vitória'
           this.result.message = 'Você venceu'
+          this.result.icon = require('@/assets/the-witcher.png')
         } else {
           this.result.title = 'Derrota'
           this.result.message = 'Você perdeu'
+          this.result.icon = require('@/assets/wild-hunt.png')
         }
 
         this.$refs['bv-modal-example'].show()
@@ -369,5 +387,13 @@ export default {
   }
   .my-cards, .opponent-cards, .opponent-table, .my-table {
     padding: 20px;
+  }
+  .modal-body {
+    background: #fff;
+  }
+  button.close {
+    background: none !important;
+    border: none !important;
+    font-size: 25px !important;
   }
 </style>
